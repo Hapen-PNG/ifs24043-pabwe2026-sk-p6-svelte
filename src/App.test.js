@@ -55,12 +55,12 @@ describe('App', () => {
     expect(screen.getByLabelText('Menu utama')).toBeInTheDocument()
   })
 
-  it('pengguna masuk diarahkan keluar dari halaman login', async () => {
+  it('pengguna masuk tetap dapat membuka halaman login', async () => {
     signIn()
     navigate('/auth/login', true)
     render(App)
-    expect(await screen.findByRole('heading', { name: 'Semua Link Tree' })).toBeInTheDocument()
-    expect(get(currentPath)).toBe('/')
+    expect(await screen.findByRole('heading', { name: 'Masuk' })).toBeInTheDocument()
+    expect(get(currentPath)).toBe('/auth/login')
   })
 
   it('menampilkan halaman detail dengan parameter rute', async () => {

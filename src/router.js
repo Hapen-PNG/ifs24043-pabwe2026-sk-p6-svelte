@@ -44,7 +44,6 @@ export function resolveRoute(path, authenticated) {
   if (!match) return { route: null, params: {}, redirect: null }
 
   const { route, params } = match
-  if (route.guest && authenticated) return { route, params, redirect: '/' }
   if (!route.guest && !authenticated) return { route, params, redirect: '/auth/login' }
   return { route, params, redirect: null }
 }
