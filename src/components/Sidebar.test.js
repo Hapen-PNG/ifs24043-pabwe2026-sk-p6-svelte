@@ -4,7 +4,6 @@ import Sidebar from './Sidebar.svelte'
 import { currentPath } from '../lib/navigation.js'
 
 const current = (name) => screen.getByRole('link', { name })
-let resetModuleCache = false
 
 function setPath(path) {
   window.history.replaceState(null, '', path)
@@ -14,14 +13,6 @@ function setPath(path) {
 describe('Sidebar', () => {
   beforeEach(() => {
     setPath('/')
-  })
-
-  afterEach(() => {
-    vi.doUnmock('../lib/navigation.js')
-    if (resetModuleCache) {
-      vi.resetModules()
-      resetModuleCache = false
-    }
   })
 
   it('menampilkan menu utama dan menandai beranda aktif', () => {
@@ -91,20 +82,13 @@ describe('Sidebar', () => {
     expect(window.location.pathname).toBe('/users')
   })
 
-  it('tetap merender menu saat action link tidak tersedia', async () => {
-    vi.doMock('../lib/navigation.js', async (orig) => ({
-      ...(await orig()),
-      link: undefined
-    }))
-    resetModuleCache = true
-    const SidebarWithoutLink = (await import('./Sidebar.svelte?without-link-action')).default
+  it('tetap menangani klik dengan modifier seperti action navigasi', async () => {
+    setPath('/')
+    const onclose = vi.fn()
+    render(Sidebar, { open: true, onclose })
+    await fireEvent.click(current('Profil'), { ctrlKey: true })
 
-    render(SidebarWithoutLink, { open: true })
-
-    const labels = ['Semua Link Tree', 'Pengguna', 'Profil']
-    expect(screen.getAllByRole('link')).toHaveLength(3)
-    for (const label of labels) {
-      expect(current(label)).toBeInTheDocument()
-    }
+    expect(get(currentPath)).toBe('/profile')
+    expect(onclose).toHaveBeenCalledTimes(1)
   })
 })

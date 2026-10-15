@@ -1,5 +1,5 @@
 <script>
-  import { currentPath, link } from '../lib/navigation.js'
+  import { currentPath, navigate } from '../lib/navigation.js'
 
   let { open = false, onclose } = $props()
 
@@ -16,6 +16,14 @@
     }
     return path === href
   }
+
+  function handleLinkClick(event, href) {
+    event.preventDefault()
+    navigate(href)
+    if (onclose) {
+      onclose(event)
+    }
+  }
 </script>
 
 <aside
@@ -26,8 +34,7 @@
     {#each items as item (item.href)}
       <a
         href={item.href}
-        use:link
-        onclick={onclose}
+        onclick={(event) => handleLinkClick(event, item.href)}
         aria-current={isActive(item.href, $currentPath) ? 'page' : undefined}
         class="rounded-lg px-3 py-2 text-sm font-medium {isActive(item.href, $currentPath)
           ? 'bg-indigo-50 text-indigo-700'
