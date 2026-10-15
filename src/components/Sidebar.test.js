@@ -6,6 +6,11 @@ import { currentPath } from '../lib/navigation.js'
 const current = (name) => screen.getByRole('link', { name })
 
 describe('Sidebar', () => {
+  beforeEach(() => {
+    window.history.replaceState(null, '', '/')
+    currentPath.set('/')
+  })
+
   it('menampilkan menu utama dan menandai beranda aktif', () => {
     currentPath.set('/')
     render(Sidebar, { open: true, onclose: vi.fn() })
@@ -39,7 +44,15 @@ describe('Sidebar', () => {
     expect(screen.getByLabelText('Menu utama')).toHaveClass('hidden')
   })
 
+  it('menetapkan kelas menu aktif dan tidak aktif sesuai path', () => {
+    currentPath.set('/profile')
+    render(Sidebar, { open: true, onclose: vi.fn() })
+    expect(current('Profil')).toHaveClass('bg-indigo-50', 'text-indigo-700')
+    expect(current('Semua Link Tree')).toHaveClass('text-slate-600', 'hover:bg-slate-100')
+  })
+
   it('klik menu bernavigasi dan memanggil onclose', async () => {
+    currentPath.set('/')
     const onclose = vi.fn()
     render(Sidebar, { open: true, onclose })
     await fireEvent.click(current('Profil'))
