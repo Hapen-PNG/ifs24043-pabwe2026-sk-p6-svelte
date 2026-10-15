@@ -34,6 +34,13 @@ describe('Navbar', () => {
     expect(screen.getAllByText('AU').length).toBeGreaterThan(0)
   })
 
+  it('merender foto ketika nama pengguna tidak tersedia', () => {
+    authUser.set({ photo: 'https://example.com/photo.png' })
+    const { container } = render(Navbar, { ontoggle: vi.fn() })
+    expect(container.querySelector('img')).toHaveAttribute('alt', 'Foto ')
+    expect(container.querySelector('img')).toHaveAttribute('src', 'https://example.com/photo.png')
+  })
+
   it('tombol menu memanggil ontoggle', async () => {
     const ontoggle = vi.fn()
     render(Navbar, { ontoggle })

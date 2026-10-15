@@ -57,6 +57,44 @@ describe('HomePage', () => {
     expect(linkTreeApi.getLinkTrees).toHaveBeenCalledWith(false)
   })
 
+  it('merender item dengan data null dan undefined', async () => {
+    linkTreeApi.getLinkTrees.mockResolvedValue(
+      ok({
+        link_trees: [
+          makeLinkTree({
+            id: null,
+            title: null,
+            description: null,
+            cover: 'https://example.com/null.png',
+            total_links: null,
+            author: { name: null }
+          }),
+          makeLinkTree({
+            id: undefined,
+            title: undefined,
+            description: undefined,
+            cover: 'https://example.com/undefined.png',
+            total_links: undefined,
+            author: {}
+          })
+        ]
+      })
+    )
+    const { container } = render(HomePage)
+    expect(await screen.findByRole('heading', { name: 'Semua Link Tree' })).toBeInTheDocument()
+    expect(container.querySelector('img[alt^="Sampul"]')).toHaveAttribute(
+      'src',
+      'https://example.com/null.png'
+    )
+    expect(container.querySelectorAll('img[alt^="Sampul"]').length).toBe(2)
+    expect(
+      Array.from(container.querySelectorAll('a')).some(
+        (anchor) => anchor.getAttribute('href') === '/link-trees/'
+      )
+    ).toBe(true)
+    expect(screen.getAllByRole('button', { name: /^Hapus$/ })).toHaveLength(2)
+  })
+
   it('tombol hapus hanya untuk pemilik', async () => {
     render(HomePage)
     await screen.findByText('Catatan Budi')
