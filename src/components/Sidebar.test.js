@@ -73,4 +73,12 @@ describe('Sidebar', () => {
     expect(get(currentPath)).toBe('/profile')
     expect(onclose).toHaveBeenCalledTimes(1)
   })
+
+  it('klik menu tetap bernavigasi saat onclose tidak diberikan', async () => {
+    setPath('/')
+    render(Sidebar)
+    await fireEvent.click(current('Pengguna'))
+    expect(get(currentPath)).toBe('/users')
+    expect(window.location.pathname).toBe('/users')
+  })
 })
