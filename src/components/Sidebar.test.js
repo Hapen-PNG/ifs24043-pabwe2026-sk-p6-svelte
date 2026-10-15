@@ -55,6 +55,16 @@ describe('Sidebar', () => {
     expect(current('Semua Link Tree')).toHaveClass('text-slate-600', 'hover:bg-slate-100')
   })
 
+  it('tidak menandai menu apa pun aktif pada rute yang tidak terdaftar', () => {
+    setPath('/auth/login')
+    render(Sidebar)
+    for (const label of ['Semua Link Tree', 'Pengguna', 'Profil']) {
+      expect(current(label)).not.toHaveAttribute('aria-current')
+      expect(current(label)).toHaveClass('text-slate-600', 'hover:bg-slate-100')
+    }
+    expect(screen.getByLabelText('Menu utama')).toHaveClass('hidden')
+  })
+
   it('klik menu bernavigasi dan memanggil onclose', async () => {
     setPath('/')
     const onclose = vi.fn()
