@@ -57,7 +57,7 @@ pipeline {
         stage('Test') {
             agent {
                 docker {
-                    image 'node:24-alpine'
+                    image 'node:24'
                     reuseNode true
                 }
             }
@@ -65,10 +65,26 @@ pipeline {
             steps {
                 sh '''
                     set -e
+                    node -v
+                    npx vitest --version
 
                     echo "=== Running Tests with Coverage ==="
 
-                    npx vitest run --coverage
+                    npx vitest run --coverage --coverage.reporter=text --coverage.reporter=json || TEST_FAILED=1
+
+                    node -e "
+                    const c=require('./coverage/coverage-final.json');
+                    for (const f in c) {
+                      if (!f.includes('Sidebar')) continue;
+                      const d=c[f];
+                      for (const k in d.b) {
+                        d.b[k].forEach((n,i)=>{
+                          if (n===0) console.log('UNCOVERED', d.branchMap[k].type, JSON.stringify(d.branchMap[k].locations[i]));
+                        });
+                      }
+                    }"
+
+                    if [ "$TEST_FAILED" = "1" ]; then exit 1; fi
 
                     echo "=== Tests Passed ==="
                 '''
