@@ -10,7 +10,11 @@
   ]
 
   function isActive(href, path) {
-    return href === '/' ? path === '/' || path.startsWith('/link-trees') : path === href
+    if (href === '/') {
+      if (path === '/') return true
+      return path.startsWith('/link-trees')
+    }
+    return path === href
   }
 </script>
 
