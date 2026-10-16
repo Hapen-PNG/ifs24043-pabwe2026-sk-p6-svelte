@@ -9,6 +9,10 @@
 
   const name = $derived($authUser?.name ?? '')
   const photo = $derived(assetUrl($authUser?.photo))
+
+  function photoAlt(userName) {
+    return `Foto ${userName}`
+  }
 </script>
 
 <header class="sticky top-0 z-30 border-b border-slate-200 bg-white">
@@ -30,7 +34,7 @@
 
     <div class="flex items-center gap-3">
       {#if photo}
-        <img src={photo} alt="Foto {name}" class="h-9 w-9 rounded-full object-cover" />
+        <img src={photo} alt={photoAlt(name)} class="h-9 w-9 rounded-full object-cover" />
       {:else}
         <span
           class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700"

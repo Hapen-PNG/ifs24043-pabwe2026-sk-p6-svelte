@@ -8,6 +8,10 @@
     resetUsersFeedback()
     fetchUsers()
   })
+
+  function photoAlt(name) {
+    return `Foto ${name}`
+  }
 </script>
 
 <section class="flex flex-col gap-4">
@@ -24,7 +28,7 @@
       {#each $usersState.users as user (user.id)}
         <li class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4">
           {#if user.photo}
-            <img src={assetUrl(user.photo)} alt="Foto {user.name}" class="h-12 w-12 rounded-full object-cover" />
+            <img src={assetUrl(user.photo)} alt={photoAlt(user.name)} class="h-12 w-12 rounded-full object-cover" />
           {:else}
             <span class="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 font-semibold text-indigo-700">
               {getInitials(user.name)}

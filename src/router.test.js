@@ -29,8 +29,12 @@ describe('router', () => {
   it('resolveRoute menerapkan penjagaan autentikasi', () => {
     expect(resolveRoute('/tidak-ada', true)).toEqual({ route: null, params: {}, redirect: null })
     expect(resolveRoute('/auth/login', true).redirect).toBe('/')
+    expect(resolveRoute('/auth/register', true).redirect).toBe('/')
     expect(resolveRoute('/auth/login', false).redirect).toBeNull()
+    expect(resolveRoute('/auth/register', false).redirect).toBeNull()
     expect(resolveRoute('/', false).redirect).toBe('/auth/login')
+    expect(resolveRoute('/users', false).redirect).toBe('/auth/login')
+    expect(resolveRoute('/tidak-ada', false).redirect).toBe('/auth/login')
     expect(resolveRoute('/', true).redirect).toBeNull()
   })
 })

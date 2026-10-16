@@ -40,11 +40,17 @@ export function matchRoute(path) {
 }
 
 export function resolveRoute(path, authenticated) {
+  if (!authenticated && !path.startsWith('/auth')) {
+    return { route: null, params: {}, redirect: '/auth/login' }
+  }
+
+  if (authenticated && (path === '/auth/login' || path === '/auth/register')) {
+    return { route: null, params: {}, redirect: '/' }
+  }
+
   const match = matchRoute(path)
   if (!match) return { route: null, params: {}, redirect: null }
 
   const { route, params } = match
-  if (route.guest && authenticated) return { route, params, redirect: '/' }
-  if (!route.guest && !authenticated) return { route, params, redirect: '/auth/login' }
   return { route, params, redirect: null }
 }

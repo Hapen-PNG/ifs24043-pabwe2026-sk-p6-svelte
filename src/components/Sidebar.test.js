@@ -52,5 +52,4 @@ describe('Sidebar', () => {
     await fireEvent.click(current('Pengguna'))
     expect(get(currentPath)).toBe('/users')
   })
-
 })

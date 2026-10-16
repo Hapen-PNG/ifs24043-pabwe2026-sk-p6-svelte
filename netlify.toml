@@ -4,13 +4,6 @@
 
 [[redirects]]
   from = "/"
-  to = "/index.html"
-  status = 200
-  force = true
-  conditions = {Cookie = ["delcom_logged_in"]}
-
-[[redirects]]
-  from = "/"
   to = "/auth/login"
   status = 302
   force = true

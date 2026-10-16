@@ -45,6 +45,7 @@ describe('App', () => {
   })
 
   it('menampilkan halaman 404 untuk path tidak dikenal', async () => {
+    signIn()
     navigate('/tidak-ada', true)
     render(App)
     expect(await screen.findByRole('heading', { name: 'Halaman tidak ditemukan' })).toBeInTheDocument()
@@ -60,6 +61,14 @@ describe('App', () => {
   it('pengguna masuk diarahkan keluar dari halaman login', async () => {
     signIn()
     navigate('/auth/login', true)
+    render(App)
+    expect(await screen.findByRole('heading', { name: 'Semua Link Tree' })).toBeInTheDocument()
+    expect(get(currentPath)).toBe('/')
+  })
+
+  it('pengguna masuk diarahkan keluar dari halaman register', async () => {
+    signIn()
+    navigate('/auth/register', true)
     render(App)
     expect(await screen.findByRole('heading', { name: 'Semua Link Tree' })).toBeInTheDocument()
     expect(get(currentPath)).toBe('/')
@@ -114,5 +123,6 @@ describe('App', () => {
     await logoutUser()
     expect(await screen.findByRole('heading', { name: 'Masuk' })).toBeInTheDocument()
     expect(get(currentPath)).toBe('/auth/login')
+    expect(localStorage.getItem('delcom_link_tree_token')).toBeNull()
   })
 })

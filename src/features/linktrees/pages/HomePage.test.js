@@ -114,7 +114,6 @@ describe('HomePage', () => {
     expect(get(currentPath)).toBe('/link-trees/1')
   })
 
-
   it('menghapus satu link tree setelah konfirmasi', async () => {
     stubConfirm(true)
     linkTreeApi.deleteLinkTree.mockResolvedValue(ok(null, 'Berhasil menghapus data'))

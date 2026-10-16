@@ -46,6 +46,22 @@
     openModal('item')
   }
 
+  function coverAlt(title) {
+    return `Sampul ${title}`
+  }
+
+  function byline(name, createdAt) {
+    return `oleh ${name} · dibuat ${formatDate(createdAt)}`
+  }
+
+  function editItemLabel(title) {
+    return `Ubah ${title}`
+  }
+
+  function deleteItemLabel(title) {
+    return `Hapus ${title}`
+  }
+
   async function handleDelete() {
     if (!confirm(`Hapus link tree "${detail.title}"?`)) return
     if (await removeLinkTree(detail.id)) navigate('/')
@@ -73,7 +89,7 @@
   {#if detail}
     <article class="overflow-hidden rounded-xl border border-slate-200 bg-white">
       {#if hasCover(detail.cover)}
-        <img src={detail.cover} alt="Sampul {detail.title}" class="h-48 w-full object-cover" />
+        <img src={detail.cover} alt={coverAlt(detail.title)} class="h-48 w-full object-cover" />
       {:else}
         <div class="flex h-48 w-full items-center justify-center bg-indigo-50">
           <LogoIcon size={56} />
@@ -85,9 +101,7 @@
           <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs">{typeLabel(detail.type)}</span>
         </div>
         <p class="text-slate-700">{detail.description}</p>
-        <p class="text-sm text-slate-500">
-          oleh {detail.author.name} &middot; dibuat {formatDate(detail.created_at)}
-        </p>
+        <p class="text-sm text-slate-500">{byline(detail.author.name, detail.created_at)}</p>
 
         {#if isOwner}
           <div class="flex flex-wrap gap-2">
@@ -129,10 +143,10 @@
               </div>
               {#if isOwner}
                 <div class="flex shrink-0 gap-2 text-sm">
-                  <button type="button" onclick={() => openEditItem(item)} aria-label="Ubah {item.title}" class="text-slate-700 hover:underline">
+                  <button type="button" onclick={() => openEditItem(item)} aria-label={editItemLabel(item.title)} class="text-slate-700 hover:underline">
                     Ubah
                   </button>
-                  <button type="button" onclick={() => handleDeleteItem(item)} aria-label="Hapus {item.title}" class="text-red-600 hover:underline">
+                  <button type="button" onclick={() => handleDeleteItem(item)} aria-label={deleteItemLabel(item.title)} class="text-red-600 hover:underline">
                     Hapus
                   </button>
                 </div>
