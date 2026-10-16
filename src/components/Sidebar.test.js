@@ -65,13 +65,18 @@ describe('Sidebar', () => {
     expect(screen.getByLabelText('Menu utama')).toHaveClass('hidden')
   })
 
-  it('klik menu bernavigasi dan memanggil onclose', async () => {
+  it('klik tiap menu bernavigasi dan memanggil onclose', async () => {
     setPath('/')
     const onclose = vi.fn()
     render(Sidebar, { open: true, onclose })
+
+    await fireEvent.click(current('Semua Link Tree'))
+    expect(get(currentPath)).toBe('/')
     await fireEvent.click(current('Profil'))
     expect(get(currentPath)).toBe('/profile')
-    expect(onclose).toHaveBeenCalledTimes(1)
+    await fireEvent.click(current('Pengguna'))
+    expect(get(currentPath)).toBe('/users')
+    expect(onclose).toHaveBeenCalledTimes(3)
   })
 
   it('klik menu tetap bernavigasi saat onclose tidak diberikan', async () => {
@@ -80,6 +85,17 @@ describe('Sidebar', () => {
     await fireEvent.click(current('Pengguna'))
     expect(get(currentPath)).toBe('/users')
     expect(window.location.pathname).toBe('/users')
+  })
+
+  it('mengabaikan klik pada area nav yang bukan tautan', async () => {
+    setPath('/profile')
+    const onclose = vi.fn()
+    render(Sidebar, { open: true, onclose })
+
+    await fireEvent.click(screen.getByRole('navigation'))
+
+    expect(get(currentPath)).toBe('/profile')
+    expect(onclose).not.toHaveBeenCalled()
   })
 
   it('tetap menangani klik dengan modifier seperti action navigasi', async () => {
