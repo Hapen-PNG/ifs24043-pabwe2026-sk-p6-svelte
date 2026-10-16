@@ -9,7 +9,12 @@
 
   const resolved = $derived(resolveRoute($currentPath, $isAuthenticated))
 
-  onMount(initRouter)
+  onMount(() => {
+    const cleanup = initRouter()
+    const initialRoute = resolveRoute(window.location.pathname, $isAuthenticated)
+    if (initialRoute.redirect) navigate(initialRoute.redirect, true)
+    return cleanup
+  })
 
   $effect(() => {
     if (resolved.redirect) navigate(resolved.redirect, true)
