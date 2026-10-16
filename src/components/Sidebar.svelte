@@ -31,7 +31,7 @@
   class="{open ? 'block' : 'hidden'} w-full shrink-0 border-b border-slate-200 bg-white p-4 md:block md:min-h-[calc(100vh-4rem)] md:w-60 md:border-r md:border-b-0"
 >
   <nav class="flex flex-col gap-1">
-    {#each items as item (item.href)}
+    {#each items as item}
       <a
         href={item.href}
         onclick={(event) => handleLinkClick(event, item.href)}
