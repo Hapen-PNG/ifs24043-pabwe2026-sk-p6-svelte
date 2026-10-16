@@ -1,12 +1,21 @@
 [build]
-command = "npm run build"
-publish = "dist"
+  command = "npm run build"
+  publish = "dist"
 
 [[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
-force = false
+  from = "/"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = {Cookie = ["delcom_logged_in"]}
 
-[build.processing.html]
-pretty_urls = false
+[[redirects]]
+  from = "/"
+  to = "/auth/login"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
