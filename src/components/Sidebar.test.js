@@ -46,4 +46,11 @@ describe('Sidebar', () => {
     expect(get(currentPath)).toBe('/profile')
     expect(onclose).toHaveBeenCalledTimes(1)
   })
+
+  it('klik menu tetap bernavigasi tanpa callback onclose', async () => {
+    render(Sidebar)
+    await fireEvent.click(current('Pengguna'))
+    expect(get(currentPath)).toBe('/users')
+  })
+
 })

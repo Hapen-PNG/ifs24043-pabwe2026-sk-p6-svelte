@@ -48,4 +48,15 @@ describe('ChangeModal', () => {
     await u.click(screen.getByRole('button', { name: 'Batal' }))
     expect(onclose).toHaveBeenCalledTimes(1)
   })
+
+  it('memilih tiap jenis akses yang tersedia', async () => {
+    const u = userEvent.setup()
+    render(ChangeModal, { linkTree: makeLinkTree(), onsaved: vi.fn(), onclose: vi.fn() })
+    const type = screen.getByLabelText('Tipe')
+
+    for (const value of ['public', 'unlisted', 'private']) {
+      await u.selectOptions(type, value)
+      expect(type).toHaveValue(value)
+    }
+  })
 })

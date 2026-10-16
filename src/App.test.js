@@ -3,7 +3,8 @@ import { render, screen, waitFor } from '@testing-library/svelte'
 import App from './App.svelte'
 import * as linkTreeApi from './features/linktrees/api/linkTreeApi.js'
 import * as usersApi from './features/users/api/usersApi.js'
-import { authToken, authUser, clearSession } from './features/auth/states/authStore.js'
+import * as authApi from './features/auth/api/authApi.js'
+import { authToken, authUser, clearSession, loginUser, logoutUser } from './features/auth/states/authStore.js'
 import { resetLinkTreesState } from './features/linktrees/states/linkTreesStore.js'
 import { resetUsersState } from './features/users/states/usersStore.js'
 import { currentPath, navigate } from './lib/navigation.js'
@@ -11,6 +12,7 @@ import { makeLinkTree, ok, user } from './test/fixtures.js'
 
 vi.mock('./features/linktrees/api/linkTreeApi.js')
 vi.mock('./features/users/api/usersApi.js')
+vi.mock('./features/auth/api/authApi.js')
 
 function signIn() {
   authToken.set('tok')
@@ -98,5 +100,19 @@ describe('App', () => {
     await screen.findByRole('heading', { name: 'Semua Link Tree' })
     clearSession()
     await waitFor(() => expect(get(currentPath)).toBe('/auth/login'))
+  })
+
+  it('mengalihkan guest saat login dan kembali ke login setelah logout', async () => {
+    authApi.login.mockResolvedValue(ok({ token: 'tok', user }))
+    authApi.logout.mockResolvedValue(ok(null))
+    render(App)
+
+    expect(await screen.findByRole('heading', { name: 'Masuk' })).toBeInTheDocument()
+    await loginUser({ email: user.email, password: 'password' })
+    expect(await screen.findByRole('heading', { name: 'Semua Link Tree' })).toBeInTheDocument()
+
+    await logoutUser()
+    expect(await screen.findByRole('heading', { name: 'Masuk' })).toBeInTheDocument()
+    expect(get(currentPath)).toBe('/auth/login')
   })
 })

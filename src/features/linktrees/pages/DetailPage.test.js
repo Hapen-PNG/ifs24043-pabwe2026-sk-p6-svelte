@@ -59,6 +59,17 @@ describe('DetailPage', () => {
     expect(screen.queryByRole('button', { name: 'Tambah Tautan' })).not.toBeInTheDocument()
   })
 
+  it('pemilik melihat placeholder cover dan tautan kosong', async () => {
+    linkTreeApi.getLinkTree.mockResolvedValue(
+      ok({ link_tree: makeLinkTree({ cover: null, items: [] }) })
+    )
+    render(DetailPage, { params })
+
+    expect(await screen.findByText('Belum ada tautan.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Ubah Data' })).toBeInTheDocument()
+    expect(screen.queryByRole('img', { name: /Sampul/ })).not.toBeInTheDocument()
+  })
+
   it('bukan pemilik tidak melihat tombol ubah dan hapus tautan', async () => {
     authUser.set({ ...user, id: 99 })
     render(DetailPage, { params })

@@ -34,6 +34,18 @@ describe('Navbar', () => {
     expect(screen.getAllByText('AU').length).toBeGreaterThan(0)
   })
 
+  it('memperbarui foto dan inisial saat data pengguna berubah', async () => {
+    render(Navbar, { ontoggle: vi.fn() })
+    expect(screen.queryByRole('img', { name: /Foto/ })).not.toBeInTheDocument()
+
+    authUser.set(user)
+    await waitFor(() => expect(screen.getByAltText('Foto Abdullah Ubaid')).toBeInTheDocument())
+
+    authUser.set({ ...user, photo: null })
+    await waitFor(() => expect(screen.queryByRole('img', { name: /Foto/ })).not.toBeInTheDocument())
+    expect(screen.getAllByText('AU').length).toBeGreaterThan(0)
+  })
+
   it('tombol menu memanggil ontoggle', async () => {
     const ontoggle = vi.fn()
     render(Navbar, { ontoggle })
@@ -56,4 +68,5 @@ describe('Navbar', () => {
     await fireEvent.click(screen.getByRole('link', { name: /Delcom Link Tree/ }))
     expect(get(currentPath)).toBe('/')
   })
+
 })

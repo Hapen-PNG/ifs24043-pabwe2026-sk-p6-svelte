@@ -20,12 +20,19 @@ describe('UsersPage', () => {
 
   it('menampilkan daftar pengguna dengan foto atau inisial', async () => {
     usersApi.getUsers.mockResolvedValue(
-      ok({ users: [user, { id: 2, name: 'Budi Santoso', email: 'budi@delcom.org', photo: '' }] })
+      ok({
+        users: [
+          user,
+          { id: 2, name: 'Budi Santoso', email: 'budi@delcom.org', photo: '' },
+          { id: 3, name: 'Citra Dewi', email: 'citra@delcom.org', photo: null }
+        ]
+      })
     )
     render(UsersPage)
     expect(await screen.findByText('ubaid@delcom.org')).toBeInTheDocument()
     expect(screen.getByAltText('Foto Abdullah Ubaid')).toBeInTheDocument()
     expect(screen.getByText('BS')).toBeInTheDocument()
+    expect(screen.getByText('CD')).toBeInTheDocument()
   })
 
   it('menampilkan keadaan kosong', async () => {

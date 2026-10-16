@@ -41,6 +41,14 @@ describe('HomePage', () => {
     pending.resolve(ok({ link_trees: [] }))
   })
 
+  it('menampilkan keadaan kosong saat belum ada link tree', async () => {
+    authUser.set(null)
+    linkTreeApi.getLinkTrees.mockResolvedValue(ok({ link_trees: [] }))
+    render(HomePage)
+    expect(await screen.findByText('Tidak ada link tree yang ditemukan.')).toBeInTheDocument()
+    expect(screen.getAllByText('0', { selector: 'dd' })).toHaveLength(5)
+  })
+
   it('menampilkan daftar, statistik, cover, dan placeholder', async () => {
     render(HomePage)
     expect(await screen.findByText('Catatan Budi')).toBeInTheDocument()
@@ -105,6 +113,7 @@ describe('HomePage', () => {
     await fireEvent.click(await screen.findByRole('link', { name: 'Kursus Ku' }))
     expect(get(currentPath)).toBe('/link-trees/1')
   })
+
 
   it('menghapus satu link tree setelah konfirmasi', async () => {
     stubConfirm(true)
