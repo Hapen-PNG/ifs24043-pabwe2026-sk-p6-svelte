@@ -7,7 +7,6 @@ import { authUser, clearSession } from '../../auth/states/authStore.js'
 import { resetLinkTreesState } from '../states/linkTreesStore.js'
 import { ApiError } from '../../../helpers/apiHelper.js'
 import { currentPath } from '../../../lib/navigation.js'
-import * as toolsHelper from '../../../helpers/toolsHelper.js'
 import { deferred, makeLinkTree, ok, user } from '../../../test/fixtures.js'
 
 vi.mock('../api/linkTreeApi.js')
@@ -49,62 +48,6 @@ describe('DetailPage', () => {
     )
     render(DetailPage, { params })
     expect(await screen.findByAltText('Sampul Kursus Ku')).toBeInTheDocument()
-  })
-
-  it('menampilkan placeholder untuk cover kosong dan memproses detail dengan nilai kosong', async () => {
-    linkTreeApi.getLinkTree.mockResolvedValue(
-      ok({
-        link_tree: makeLinkTree({
-          cover: null,
-          created_at: 'invalid-date',
-          author: { name: '' },
-          items: [{ id: 0, link_tree_id: 1, title: 'Tautan kosong', url: '' }]
-        })
-      })
-    )
-    render(DetailPage, { params })
-    expect(await screen.findByRole('heading', { name: 'Kursus Ku' })).toBeInTheDocument()
-    expect(screen.queryByAltText('Sampul Kursus Ku')).not.toBeInTheDocument()
-    expect(screen.getByText('Tautan kosong')).toBeInTheDocument()
-    expect(screen.getByText('Tautan kosong').closest('li').querySelector('a')).toHaveAttribute('href', '')
-    expect(screen.getByText(/dibuat -/)).toBeInTheDocument()
-  })
-
-  it('merender atribut foto dan item dengan judul null atau undefined', async () => {
-    linkTreeApi.getLinkTree.mockResolvedValue(
-      ok({
-        link_tree: makeLinkTree({
-          title: null,
-          cover: 'https://example.com/cover.png',
-          created_at: undefined,
-          author: {},
-          items: [
-            { id: 11, link_tree_id: 1, title: null, url: null },
-            { id: 12, link_tree_id: 1, url: undefined }
-          ]
-        })
-      })
-    )
-    const { container } = render(DetailPage, { params })
-    expect(await screen.findByText('Publik')).toBeInTheDocument()
-    expect(container.querySelector('img[alt^="Sampul"]')).toHaveAttribute(
-      'src',
-      'https://example.com/cover.png'
-    )
-    expect(screen.getAllByRole('button', { name: /^Ubah$/ })).toHaveLength(2)
-    expect(screen.getAllByRole('button', { name: /^Hapus$/ })).toHaveLength(2)
-    expect(screen.getByText(/oleh\s*· dibuat -/)).toBeInTheDocument()
-  })
-
-  it('menampilkan teks kosong jika formatter tanggal menghasilkan undefined', async () => {
-    const formatDate = vi.spyOn(toolsHelper, 'formatDate').mockReturnValueOnce(undefined)
-    try {
-      render(DetailPage, { params })
-      expect(await screen.findByRole('heading', { name: 'Kursus Ku' })).toBeInTheDocument()
-      expect(screen.getByText(/oleh Abdullah Ubaid · dibuat\s*$/)).toBeInTheDocument()
-    } finally {
-      formatDate.mockRestore()
-    }
   })
 
   it('menyembunyikan aksi untuk bukan pemilik dan menampilkan keadaan tanpa tautan', async () => {

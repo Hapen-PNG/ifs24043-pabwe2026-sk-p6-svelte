@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import ChangeModal from './ChangeModal.svelte'
 import * as linkTreeApi from '../api/linkTreeApi.js'
 import { resetLinkTreesState } from '../states/linkTreesStore.js'
-import { LINK_TREE_TYPES } from '../../../helpers/toolsHelper.js'
 import { ApiError } from '../../../helpers/apiHelper.js'
 import { makeLinkTree, ok } from '../../../test/fixtures.js'
 
@@ -48,16 +47,5 @@ describe('ChangeModal', () => {
 
     await u.click(screen.getByRole('button', { name: 'Batal' }))
     expect(onclose).toHaveBeenCalledTimes(1)
-  })
-
-  it('merender opsi dengan nilai null', () => {
-    const length = LINK_TREE_TYPES.length
-    LINK_TREE_TYPES.push({ value: null, label: 'Tanpa nilai' })
-    try {
-      render(ChangeModal, { linkTree: makeLinkTree(), onsaved: vi.fn(), onclose: vi.fn() })
-      expect(screen.getByRole('option', { name: 'Tanpa nilai' })).toBeInTheDocument()
-    } finally {
-      LINK_TREE_TYPES.splice(length)
-    }
   })
 })

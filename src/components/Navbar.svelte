@@ -7,7 +7,7 @@
 
   let { ontoggle } = $props()
 
-  const name = $derived($authUser?.name)
+  const name = $derived($authUser?.name ?? '')
   const photo = $derived(assetUrl($authUser?.photo))
 </script>
 
@@ -35,7 +35,7 @@
         <span
           class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700"
         >
-          {getInitials(name ?? '')}
+          {getInitials(name)}
         </span>
       {/if}
       <span class="hidden text-sm font-medium sm:inline">{name}</span>
