@@ -68,7 +68,7 @@ pipeline {
 
                     echo "=== Running Tests with Coverage ==="
 
-                    npx vitest run --coverage
+                    npm run test:coverage
 
                     echo "=== Tests Passed ==="
                 '''

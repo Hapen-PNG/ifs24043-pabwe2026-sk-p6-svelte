@@ -81,9 +81,10 @@ export default defineConfig(({ mode }) => {
       include: ['src/**/*.test.js'],
       coverage: {
         provider: 'v8',
+        reportsDirectory: './coverage',
         include: ['src/**/*.{js,svelte}'],
         exclude: ['src/**/*.test.js', 'src/test/**'],
-        reporter: ['text', 'html'],
+        reporter: ['text', 'html', 'lcov'],
         thresholds: {
           statements: 100,
           branches: 100,
